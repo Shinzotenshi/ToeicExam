@@ -1,0 +1,10 @@
+@using ToeicExam.Web.Views.Shared.Components.RightNavbarLanguageSwitch
+@using ToeicExam.Web.Views.Shared.Components.RightNavbarUserArea
+<ul class="navbar-nav ml-auto align-items-center">
+    <li class="nav-item mr-3 d-none d-sm-block">
+        <span class="badge badge-light border text-primary px-3 py-2 font-weight-bold" style="font-size: 13px;">
+            🇻🇳 Tiếng Việt
+        </span>
+    </li>
+    @await Component.InvokeAsync(typeof(RightNavbarUserAreaViewComponent))
+</ul>

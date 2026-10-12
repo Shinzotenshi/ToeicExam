@@ -1,0 +1,210 @@
+@using ToeicExam.Toeic.Dto
+@model List<ExamDto>
+@{
+    ViewBag.Title = "Quản lý Đề thi TOEIC Reading";
+    var errorMsg = TempData["ErrorMessage"] as string;
+    var successMsg = TempData["SuccessMessage"] as string;
+    var valErrorsJson = TempData["ValidationErrors"] as string;
+    List<string> validationErrors = null;
+    if (!string.IsNullOrEmpty(valErrorsJson))
+    {
+        try { validationErrors = Newtonsoft.Json.JsonConvert.DeserializeObject<List<string>>(valErrorsJson); } catch { }
+    }
+}
+
+<section class="content-header">
+    <div class="container-fluid">
+        <div class="row mb-2">
+            <div class="col-sm-6">
+                <h1 class="m-0 font-weight-bold text-primary"><i class="fas fa-book-reader mr-2"></i>Quản lý Đề thi TOEIC Reading</h1>
+            </div>
+            <div class="col-sm-6 text-right">
+                <button type="button" class="btn btn-primary btn-lg shadow-sm" data-toggle="modal" data-target="#UploadWordModal">
+                    <i class="fas fa-file-word mr-1"></i> Upload File Word (.docx) Tạo Đề Thi
+                </button>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="content">
+    <div class="container-fluid">
+        @if (!string.IsNullOrEmpty(successMsg))
+        {
+            <div class="alert alert-success alert-dismissible fade show shadow-sm" role="alert">
+                <h5><i class="icon fas fa-check-circle"></i> Thành công!</h5>
+                @successMsg
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+        }
+
+        @if (!string.IsNullOrEmpty(errorMsg))
+        {
+            <div class="alert alert-danger alert-dismissible fade show shadow-sm" role="alert">
+                <h5><i class="icon fas fa-exclamation-triangle"></i> Phát hiện lỗi định dạng - Đã hủy bỏ thao tác lưu CSDL!</h5>
+                <p class="mb-2"><strong>@errorMsg</strong></p>
+                @if (validationErrors != null && validationErrors.Any())
+                {
+                    <div class="bg-white text-danger p-3 rounded border" style="max-height: 250px; overflow-y: auto;">
+                        <strong>Chi tiết các lỗi cần chỉnh sửa trong file Word:</strong>
+                        <ul class="mb-0 mt-2 pl-3">
+                            @foreach (var err in validationErrors)
+                            {
+                                <li><code>@err</code></li>
+                            }
+                        </ul>
+                    </div>
+                }
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+        }
+
+        <div class="card card-primary card-outline shadow-sm">
+            <div class="card-header bg-white d-flex align-items-center justify-content-between">
+                <h3 class="card-title font-weight-bold text-dark m-0">
+                    <i class="fas fa-list mr-2 text-primary"></i>Danh sách đề thi hiện có (@(Model?.Count ?? 0) đề)
+                </h3>
+            </div>
+            <div class="card-body p-0 table-responsive">
+                <table class="table table-hover table-striped mb-0">
+                    <thead class="thead-light">
+                        <tr>
+                            <th style="width: 60px" class="text-center">#ID</th>
+                            <th>Tên đề thi</th>
+                            <th class="text-center" style="width: 140px">Số lượng câu</th>
+                            <th class="text-center" style="width: 140px">Thời gian</th>
+                            <th class="text-center" style="width: 140px">Trạng thái</th>
+                            <th style="width: 180px">Ngày tạo</th>
+                            <th class="text-center" style="width: 260px">Thao tác</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @if (Model != null && Model.Any())
+                        {
+                            foreach (var item in Model)
+                            {
+                                <tr>
+                                    <td class="text-center font-weight-bold">@item.Id</td>
+                                    <td>
+                                        <div class="font-weight-bold text-dark">@item.Title</div>
+                                        <small class="text-muted">@item.Description</small>
+                                    </td>
+                                    <td class="text-center">
+                                        <span class="badge badge-info px-2 py-1"><i class="fas fa-question-circle mr-1"></i>@item.TotalQuestions câu</span>
+                                    </td>
+                                    <td class="text-center">
+                                        <span class="badge badge-warning px-2 py-1"><i class="fas fa-clock mr-1"></i>@item.DurationMinutes phút</span>
+                                    </td>
+                                    <td class="text-center">
+                                        @if (item.IsActive)
+                                        {
+                                            <span class="badge badge-success px-2 py-1">Đang mở</span>
+                                        }
+                                        else
+                                        {
+                                            <span class="badge badge-secondary px-2 py-1">Đóng</span>
+                                        }
+                                    </td>
+                                    <td>@item.CreationTime.ToString("dd/MM/yyyy HH:mm")</td>
+                                    <td class="text-center">
+                                        <a href="@Url.Action("Details", "Exams", new { id = item.Id })" class="btn btn-sm btn-info mr-1">
+                                            <i class="fas fa-eye mr-1"></i> Xem trước
+                                        </a>
+                                        <a href="@Url.Action("Edit", "Exams", new { id = item.Id })" class="btn btn-sm btn-warning mr-1">
+                                            <i class="fas fa-edit mr-1"></i> Chỉnh sửa
+                                        </a>
+                                        <a href="@Url.Action("Submissions", "Exams", new { id = item.Id })" class="btn btn-sm btn-success mr-1">
+                                            <i class="fas fa-poll-h mr-1"></i> Bài nộp
+                                        </a>
+                                        <form asp-action="Delete" asp-route-id="@item.Id" method="post" class="d-inline" onsubmit="return confirm('Bạn có chắc chắn muốn xóa đề thi này?');">
+                                            <button type="submit" class="btn btn-sm btn-danger">
+                                                <i class="fas fa-trash"></i>
+                                            </button>
+                                        </form>
+                                    </td>
+                                </tr>
+                            }
+                        }
+                        else
+                        {
+                            <tr>
+                                <td colspan="7" class="text-center py-5 text-muted">
+                                    <i class="fas fa-inbox fa-3x mb-3 text-secondary"></i>
+                                    <p>Chưa có đề thi nào trong hệ thống. Vui lòng nhấn nút <strong>Upload File Word</strong> để tạo đề thi mới!</p>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Modal Upload Word -->
+<div class="modal fade" id="UploadWordModal" tabindex="-1" role="dialog" aria-labelledby="UploadWordModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <form asp-action="UploadWord" asp-controller="Exams" method="post" enctype="multipart/form-data">
+                <div class="modal-header bg-primary text-white">
+                    <h5 class="modal-title font-weight-bold" id="UploadWordModalLabel">
+                        <i class="fas fa-file-import mr-2"></i>Tạo đề thi mới từ File Word (.docx)
+                    </h5>
+                    <button type="button" class="close text-white" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label class="font-weight-bold">Tên đề thi (tùy chọn, để trống sẽ lấy theo tên file):</label>
+                        <input type="text" name="customTitle" class="form-control" placeholder="Ví dụ: Đề thi TOEIC Reading - Đề số 01" />
+                    </div>
+                    <div class="form-group">
+                        <label class="font-weight-bold text-danger">Chọn file Word đề thi (.docx) * :</label>
+                        <div class="custom-file">
+                            <input type="file" name="wordFile" class="custom-file-input" id="wordFileInput" accept=".docx" required />
+                            <label class="custom-file-label" for="wordFileInput">Chọn file .docx...</label>
+                        </div>
+                    </div>
+
+                    <div class="callout callout-info mt-4 bg-light p-3 border rounded">
+                        <h6 class="font-weight-bold text-info"><i class="fas fa-info-circle mr-1"></i> Quy định định dạng chuẩn Tags trong file Word:</h6>
+                        <ul class="small mb-0 pl-3">
+                            <li><strong>Phần thi:</strong> <code>[PART: 5]</code>, <code>[PART: 6]</code>, <code>[PART: 7]</code></li>
+                            <li><strong>Đoạn văn (Part 6, 7):</strong> Bắt đầu bằng <code>[PASSAGE_START]</code> và kết thúc bằng <code>[PASSAGE_END]</code></li>
+                            <li><strong>Câu hỏi:</strong> <code>[Q: 101] Nội dung câu hỏi...</code> (đánh số liên tục từ 101 đến 200)</li>
+                            <li><strong>4 Đáp án:</strong> Bắt buộc có đủ <code>[A] ...</code>, <code>[B] ...</code>, <code>[C] ...</code>, <code>[D] ...</code></li>
+                            <li><strong>Đáp án đúng:</strong> <code>[KEY: A]</code> (hoặc B, C, D)</li>
+                        </ul>
+                        <div class="mt-2 text-danger small font-italic">
+                            * Hệ thống sẽ kiểm tra nghiêm ngặt 100%. Nếu thiếu tag, thiếu đáp án hoặc sai số thứ tự câu, hệ thống sẽ hủy bỏ toàn bộ và báo lỗi chi tiết.
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Đóng</button>
+                    <button type="submit" class="btn btn-primary font-weight-bold">
+                        <i class="fas fa-upload mr-1"></i> Bắt đầu đọc & Import đề thi
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        var fileInput = document.getElementById('wordFileInput');
+        if (fileInput) {
+            fileInput.addEventListener('change', function (e) {
+                var fileName = e.target.files[0] ? e.target.files[0].name : "Chọn file .docx...";
+                var label = e.target.nextElementSibling;
+                if (label) label.innerText = fileName;
+            });
+        }
+    });
+</script>

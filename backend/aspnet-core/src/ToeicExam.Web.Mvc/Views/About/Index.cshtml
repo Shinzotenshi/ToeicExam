@@ -1,0 +1,84 @@
+@using ToeicExam.Web.Startup
+@{
+    ViewBag.CurrentPageName = PageNames.About;
+    ViewBag.Title = "Giới thiệu hệ thống";
+}
+<div class="content-header">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-sm-12">
+                <h1 class="m-0 text-dark font-weight-bold"><i class="fas fa-info-circle text-primary mr-2"></i>Giới thiệu Hệ thống Khảo thí TOEIC Reading</h1>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="content">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="card shadow-sm border-0">
+                    <div class="card-body">
+                        <div class="alert alert-info border-0 shadow-sm">
+                            <h5><i class="fas fa-graduation-cap mr-2"></i>Đề thi Giữa kỳ: TOEIC Reading Test v01</h5>
+                            <p class="mb-0">Hệ thống khảo thí trắc nghiệm trực tuyến được phát triển trên nền tảng <strong>ASP.NET Core & Boilerplate</strong> (Backend) kết hợp cùng ứng dụng <strong>Flutter</strong> (Frontend web/mobile), chuẩn hóa theo cấu trúc 100 câu hỏi TOEIC Reading chuẩn quốc tế.</p>
+                        </div>
+
+                        <h4 class="text-primary font-weight-bold mt-4"><i class="fas fa-database mr-2"></i>Cấu trúc Cơ sở dữ liệu (6 Bảng chuẩn đề tài)</h4>
+                        <div class="table-responsive">
+                            <table class="table table-bordered table-striped mt-2">
+                                <thead class="bg-primary text-white">
+                                    <tr>
+                                        <th>Bảng</th>
+                                        <th>Tên thực thể</th>
+                                        <th>Mô tả chức năng</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td><code>exams</code></td>
+                                        <td>Exam</td>
+                                        <td>Quản lý danh sách đề thi, thời gian làm bài (75 phút), tổng số câu (100 câu), trạng thái hoạt động.</td>
+                                    </tr>
+                                    <tr>
+                                        <td><code>questiongroups</code></td>
+                                        <td>QuestionGroup</td>
+                                        <td>Nhóm câu hỏi chứa đoạn văn đọc hiểu, hình ảnh bài đọc minh họa (Part 6 & Part 7).</td>
+                                    </tr>
+                                    <tr>
+                                        <td><code>questions</code></td>
+                                        <td>Question</td>
+                                        <td>Chi tiết 100 câu hỏi thuộc Part 5 (Câu 101-130), Part 6 (Câu 131-146), Part 7 (Câu 147-200).</td>
+                                    </tr>
+                                    <tr>
+                                        <td><code>questionoptions</code></td>
+                                        <td>QuestionOption</td>
+                                        <td>Các đáp án lựa chọn A, B, C, D kèm nhãn và chỉ định đáp án chính xác.</td>
+                                    </tr>
+                                    <tr>
+                                        <td><code>examsubmissions</code></td>
+                                        <td>ExamSubmission</td>
+                                        <td>Lưu trữ lượt nộp bài của thí sinh, thông tin họ tên, mã sinh viên, thời gian nộp, tổng điểm /495 và số câu đúng.</td>
+                                    </tr>
+                                    <tr>
+                                        <td><code>submissionAnswers</code></td>
+                                        <td>SubmissionAnswer</td>
+                                        <td>Chi tiết từng câu trả lời thí sinh đã chọn, đối soát đáp án đúng/sai.</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <h4 class="text-primary font-weight-bold mt-4"><i class="fas fa-check-circle mr-2"></i>Các tính năng chính</h4>
+                        <ul class="list-unstyled">
+                            <li class="mb-2"><i class="fas fa-check text-success mr-2"></i><strong>Nhập đề thi tự động:</strong> Upload file Word (.docx) đề thi readingv01 tự động bóc tách 100 câu hỏi, đoạn văn và đáp án vào cơ sở dữ liệu.</li>
+                            <li class="mb-2"><i class="fas fa-check text-success mr-2"></i><strong>Làm bài thi trực quan:</strong> Giao diện thí sinh chia đôi màn hình (bên trái đoạn văn/hình ảnh, bên phải danh sách câu hỏi A-B-C-D), đồng hồ đếm ngược 75 phút, bảng chuyển câu hỏi nhanh 100 câu.</li>
+                            <li class="mb-2"><i class="fas fa-check text-success mr-2"></i><strong>Chấm điểm chuẩn TOEIC:</strong> Tự động tính điểm thang điểm TOEIC Reading tối đa 495 điểm ngay khi nộp bài.</li>
+                            <li class="mb-2"><i class="fas fa-check text-success mr-2"></i><strong>Xem lại bài thi & giải thích:</strong> Xem chi tiết từng câu làm đúng hay sai kèm đáp án chuẩn.</li>
+                            <li class="mb-2"><i class="fas fa-check text-success mr-2"></i><strong>Không yêu cầu đăng nhập:</strong> Thí sinh và cán bộ quản trị có thể truy cập và sử dụng trực tiếp các chức năng mà không gặp rào cản tài khoản.</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

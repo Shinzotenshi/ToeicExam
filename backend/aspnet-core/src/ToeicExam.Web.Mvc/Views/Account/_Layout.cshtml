@@ -1,0 +1,59 @@
+@using Abp.Configuration.Startup
+@using Abp.Web.Security.AntiForgery
+@using ToeicExam
+@using ToeicExam.Web.Resources
+@inject IAbpAntiForgeryManager AbpAntiForgeryManager
+@inject IWebResourceManager WebResourceManager
+@inject ILanguageManager LanguageManager
+@inject IMultiTenancyConfig MultiTenancyConfig
+@{
+    Layout = null;
+    AbpAntiForgeryManager.SetCookie(Context);
+
+    var pageTitle = "Đăng Nhập - Hệ Thống Thi TOEIC Online";
+    var hideTenantChange = ViewBag.HideTenantChange != null && ViewBag.HideTenantChange == true;
+    var showTenantChange = MultiTenancyConfig.IsEnabled && !hideTenantChange;
+}
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+
+    <title>@pageTitle</title>
+
+    @await Html.PartialAsync("_Styles.cshtml")
+    @RenderSection("styles", required: false)
+</head>
+<body class="hold-transition login-page">
+    <div class="login-box">
+        <div class="login-logo text-center">
+            <a href="/Exams">
+                <i class="fas fa-graduation-cap mr-2 text-warning"></i>
+                <b>TOEIC EXAM</b>
+            </a>
+            <div style="font-size: 13px; color: #cbd5e1; font-weight: 500; margin-top: 4px; letter-spacing: 0.5px;">
+                HỆ THỐNG KHẢO THÍ & QUẢN TRỊ ĐỀ THI TRỰC TUYẾN
+            </div>
+        </div>
+        <div class="card login-card">
+            @if (showTenantChange)
+            {
+                <div class="card-header bg-light border-bottom p-2 text-center" style="font-size: 13px;">
+                    <vc:tenant-change></vc:tenant-change>
+                </div>
+            }
+            <div class="card-body login-card-body">
+                @RenderBody()
+            </div>
+        </div>
+        <div class="text-center mt-3 text-white-50" style="font-size: 12px;">
+            &copy; @DateTime.Now.Year Hệ thống khảo thí TOEIC Reading ETS. Bản quyền thuộc về Bộ môn Tiếng Anh.
+        </div>
+    </div>
+    @await Html.PartialAsync("_Scripts.cshtml")
+    @RenderSection("scripts", required: false)
+    @WebResourceManager.RenderScripts()
+</body>
+</html>

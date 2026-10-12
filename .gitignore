@@ -1,0 +1,55 @@
+# ==========================================
+# .gitignore for ToeicExam (ASP.NET Core & Flutter)
+# ==========================================
+
+# Visual Studio & IDE
+.vs/
+.vscode/
+.idea/
+*.iml
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+
+# .NET Build outputs
+**/bin/
+**/obj/
+**/Debug/
+**/Release/
+**/x64/
+**/x86/
+**/bld/
+[Bb]in/
+[Oo]bj/
+[Ll]ogs/
+*.log
+
+# NuGet Packages
+*.nupkg
+**/packages/
+!**/packages/build/
+
+# Node.js
+**/node_modules/
+npm-debug.log*
+
+# Flutter & Dart
+**/.dart_tool/
+**/.flutter-plugins
+**/.flutter-plugins-dependencies
+**/.pub-cache/
+**/.pub/
+**/build/
+**/windows/flutter/ephemeral/
+**/linux/flutter/ephemeral/
+**/macos/Flutter/ephemeral/
+**/ios/Flutter/ephemeral/
+**/ios/Flutter/.last_build_id
+
+# OS generated
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+.DS_Store

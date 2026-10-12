@@ -1,0 +1,90 @@
+@using ToeicExam.Toeic.Dto
+@model List<ExamSubmissionDto>
+@{
+    var exam = ViewBag.Exam as ExamDetailDto;
+    ViewBag.Title = $"Danh sách bài nộp - {exam?.Title ?? "Đề thi"}";
+}
+
+<section class="content-header">
+    <div class="container-fluid">
+        <div class="row mb-2">
+            <div class="col-sm-8">
+                <h1 class="m-0 font-weight-bold text-primary">
+                    <i class="fas fa-poll-h mr-2"></i>Danh sách kết quả & bài nộp: @exam?.Title
+                </h1>
+                <p class="text-muted mb-0 mt-1">Tổng số lượt nộp bài: <strong>@(Model?.Count ?? 0)</strong> lượt</p>
+            </div>
+            <div class="col-sm-4 text-right">
+                <a href="@Url.Action("Index", "Exams")" class="btn btn-outline-secondary">
+                    <i class="fas fa-arrow-left mr-1"></i> Quay lại danh sách đề thi
+                </a>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="content">
+    <div class="container-fluid">
+        <div class="card card-outline card-primary shadow-sm">
+            <div class="card-header bg-white">
+                <h3 class="card-title font-weight-bold text-dark m-0">
+                    <i class="fas fa-users-cog mr-2 text-primary"></i>Kết quả làm bài của thí sinh
+                </h3>
+            </div>
+            <div class="card-body p-0 table-responsive">
+                @if (Model != null && Model.Any())
+                {
+                    <table class="table table-hover table-striped mb-0">
+                        <thead class="thead-light">
+                            <tr>
+                                <th style="width: 70px" class="text-center">#Mã</th>
+                                <th>Họ và tên thí sinh</th>
+                                <th class="text-center" style="width: 140px">Số câu đúng</th>
+                                <th class="text-center" style="width: 140px">Số câu sai</th>
+                                <th class="text-center" style="width: 140px">Bỏ qua</th>
+                                <th class="text-center" style="width: 140px">Điểm TOEIC (/495)</th>
+                                <th class="text-center" style="width: 130px">Thời lượng</th>
+                                <th style="width: 180px">Thời gian nộp</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var sub in Model)
+                            {
+                                <tr>
+                                    <td class="text-center font-weight-bold">#@sub.Id</td>
+                                    <td class="font-weight-bold text-primary">@sub.CandidateName</td>
+                                    <td class="text-center">
+                                        <span class="badge badge-success px-2 py-1">@sub.CorrectCount / 100</span>
+                                    </td>
+                                    <td class="text-center">
+                                        <span class="badge badge-danger px-2 py-1">@sub.WrongCount</span>
+                                    </td>
+                                    <td class="text-center">
+                                        <span class="badge badge-secondary px-2 py-1">@sub.SkippedCount</span>
+                                    </td>
+                                    <td class="text-center">
+                                        <span class="badge badge-primary px-3 py-1 font-weight-bold" style="font-size: 14px;">
+                                            @sub.Score / 495
+                                        </span>
+                                    </td>
+                                    <td class="text-center text-muted">@sub.TimeSpentSeconds giây</td>
+                                    <td>@sub.SubmittedAt.ToString("dd/MM/yyyy HH:mm:ss")</td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                }
+                else
+                {
+                    <div class="p-5 text-center text-muted">
+                        <i class="fas fa-inbox fa-3x mb-3 text-secondary"></i>
+                        <p class="mb-0">Chưa có thí sinh nào nộp bài cho đề thi này.</p>
+                        <a href="http://localhost:8080" target="_blank" class="btn btn-primary mt-3">
+                            <i class="fas fa-pencil-alt mr-1"></i> Mở trang thi và làm bài thử nghiệm ngay
+                        </a>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</section>
